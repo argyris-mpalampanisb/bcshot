@@ -1,0 +1,5 @@
+# Everything is checked out with LF, even on Windows: a CRLF install.sh
+# fails on Linux with "bad interpreter: /usr/bin/env bash^M".
+* text=auto eol=lf
+*.png binary
+*.jpg binary

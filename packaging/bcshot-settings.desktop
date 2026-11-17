@@ -1,0 +1,20 @@
+[Desktop Entry]
+Type=Application
+Name=bcshot
+GenericName=Screenshot Tool
+Comment=Rectangle screenshots, Bandicam style
+Exec=bcshot-settings
+Icon=camera-photo
+Terminal=false
+Categories=Utility;Graphics;
+Keywords=screenshot;capture;bandicam;
+StartupWMClass=bcshot-settings
+Actions=Capture;Adjust;
+
+[Desktop Action Capture]
+Name=Capture now
+Exec=bcshot capture
+
+[Desktop Action Adjust]
+Name=Adjust frame
+Exec=bcshot edit

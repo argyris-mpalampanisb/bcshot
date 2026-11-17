@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build (Linux)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential clang pkg-config cmake \
+            libxcb1-dev libxrandr-dev libxkbcommon-dev libxkbcommon-x11-dev libx11-xcb-dev \
+            libwayland-dev libegl-dev libgbm-dev libvulkan-dev \
+            libpipewire-0.3-dev libdbus-1-dev \
+            libfontconfig-dev libfreetype-dev libssl-dev libzstd-dev libasound2-dev
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --release --workspace --locked || cargo build --release --workspace
+
+      - name: Clippy (report only)
+        run: cargo clippy --workspace --release -- -W clippy::all
+        continue-on-error: true
+
+      - name: Check the shell scripts
+        run: |
+          bash -n install.sh
+          bash -n scripts/override_file_dates.sh
+
+      - name: Package
+        run: |
+          mkdir -p dist/bcshot/target/release
+          cp target/release/bcshot target/release/bcshot-settings dist/bcshot/target/release/
+          cp -r packaging README.md LICENSE dist/bcshot/
+          # install.sh without the build step, for the prebuilt package
+          sed '/^cargo build --release$/d' install.sh > dist/bcshot/install.sh
+          chmod +x dist/bcshot/install.sh
+          tar -C dist -czf bcshot-linux-x86_64.tar.gz bcshot
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bcshot-linux-x86_64
+          path: bcshot-linux-x86_64.tar.gz

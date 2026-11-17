@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=bcshot (background)
+Comment=Bandicam-style rectangle screenshots: frame, tray icon, hotkeys
+Exec=bcshot
+Icon=camera-photo
+Terminal=false
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

@@ -1,0 +1,13 @@
+[package]
+name = "bcshot-settings"
+version.workspace = true
+edition = "2024"
+description = "bcshot settings window (GPUI Kit, dark theme)"
+
+[dependencies]
+bcshot-common = { path = "../common" }
+# GPUI + GPUI Component + assets (Lucide icons), one dependency.
+# GPUI is pre-1.0: keep this pinned and bump deliberately.
+gpui-kit = "0.9"
+# Native folder picker through xdg-desktop-portal (KDE/GNOME file dialog)
+rfd = "0.15"
