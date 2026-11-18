@@ -8,7 +8,6 @@ use gpui_kit::component::{
     switch::Switch,
     v_flex,
 };
-use gpui_kit::gpui_base::StyledExt as _;
 use gpui_kit::{prelude::*, *};
 use std::{path::PathBuf, process::Command, time::Duration};
 
@@ -302,7 +301,7 @@ impl SettingsView {
                 h_flex()
                     .justify_between()
                     .items_center()
-                    .child(div().text_sm().font_semibold().child(title.to_string()))
+                    .child(div().text_sm().font_weight(FontWeight::SEMIBOLD).child(title.to_string()))
                     .children(
                         subtitle.map(|s| div().text_xs().text_color(t.muted_foreground).child(s)),
                     ),
@@ -355,7 +354,7 @@ impl SettingsView {
             .items_center()
             .child(
                 v_flex()
-                    .child(div().text_2xl().font_semibold().child("bcshot"))
+                    .child(div().text_2xl().font_weight(FontWeight::SEMIBOLD).child("bcshot"))
                     .child(
                         div()
                             .text_sm()
