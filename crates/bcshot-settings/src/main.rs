@@ -42,7 +42,7 @@ fn main() {
             )
             .expect("failed to open the settings window");
 
-            cx.on_window_closed(|cx| {
+            cx.on_window_closed(|cx, _closed_window| {
                 if cx.windows().is_empty() {
                     cx.quit();
                 }

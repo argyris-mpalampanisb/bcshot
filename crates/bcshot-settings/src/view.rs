@@ -8,6 +8,7 @@ use gpui_kit::component::{
     switch::Switch,
     v_flex,
 };
+use gpui_kit::gpui_base::StyledExt as _;
 use gpui_kit::{prelude::*, *};
 use std::{path::PathBuf, process::Command, time::Duration};
 
@@ -60,7 +61,8 @@ impl SettingsView {
                 &state,
                 window,
                 move |this: &mut Self, state, ev: &NumberInputEvent, window, cx| {
-                    if let NumberInputEvent::Step(action) = ev {
+                    let NumberInputEvent::Step(action) = ev;
+                    {
                         let step = if window.modifiers().shift { 10 } else { 1 };
                         let cur = get_num(&this.cfg, i);
                         let new = match action {

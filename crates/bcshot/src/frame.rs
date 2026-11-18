@@ -15,7 +15,7 @@
 use crate::server::Shared;
 use eframe::egui::{
     self, Align2, Color32, CursorIcon, FontId, Key, Pos2, Rect, Sense, Stroke, StrokeKind, Vec2,
-    ViewportBuilder, ViewportCommand, ViewportId,
+    ViewportCommand,
 };
 use std::sync::{Arc, Mutex};
 
@@ -280,11 +280,11 @@ impl FrameEditor {
                 }
                 // nearly invisible fill so clicks inside the frame land on this window
                 painter.rect_filled(shown, 0.0, Color32::from_black_alpha(1));
-                painter.rect_stroke(shown, 0.0, Stroke::new(2.0, BLUE), StrokeKind::Outside);
+                painter.rect_stroke(shown, 0.0, Stroke::new(2.0_f32, BLUE), StrokeKind::Outside);
                 for p in handles(shown) {
                     let h = Rect::from_center_size(p, Vec2::splat(8.0));
                     painter.rect_filled(h, 0.0, Color32::WHITE);
-                    painter.rect_stroke(h, 0.0, Stroke::new(1.0, BLUE), StrokeKind::Inside);
+                    painter.rect_stroke(h, 0.0, Stroke::new(1.0_f32, BLUE), StrokeKind::Inside);
                 }
 
                 // ---------- toolbar (size + Lock / Cancel) ----------
