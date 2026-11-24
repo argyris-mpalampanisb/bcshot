@@ -3,3 +3,6 @@
 *.toml.tmp
 .idea/
 .vscode/
+
+# Claude Code project notes (kept local)
+CLAUDE.md
