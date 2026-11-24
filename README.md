@@ -43,9 +43,14 @@ If you're coming from Bandicam's *Rectangle on a screen* mode on Windows, this w
 
 ### Option A: prebuilt binary
 
-1. Open the latest green run under [**Actions**](https://github.com/argyris-mpalampanisb/bcshot/actions).
-2. Download the `bcshot-linux-x86_64` artifact and extract it.
-3. Run `./install.sh`.
+1. Download `bcshot-linux-x86_64.tar.gz` from the [**latest release**](https://github.com/argyris-mpalampanisb/bcshot/releases/latest).
+2. Extract it and run the installer:
+   ```bash
+   tar -xzf bcshot-linux-x86_64.tar.gz
+   cd bcshot && ./install.sh
+   ```
+
+You still need the runtime libraries (Vulkan drivers, PipeWire, D-Bus), which most desktop installs already have. Development builds from `main` are under [Actions](https://github.com/argyris-mpalampanisb/bcshot/actions).
 
 ### Option B: build from source
 
