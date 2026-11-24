@@ -15,7 +15,7 @@ fn monitor(idx: usize) -> Result<Monitor> {
     Ok(all.swap_remove(idx))
 }
 
-/// Bandicam-style file name: "bandicam 2026-10-28 20-08-18-261.jpg"
+/// Bandicam-style file name: "bcshot 2026-10-28 20-08-18-261.jpg"
 fn next_path(cfg: &Config) -> PathBuf {
     let ext = match cfg.format {
         ImageFormat::Jpg => "jpg",

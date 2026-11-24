@@ -1,4 +1,4 @@
-use bcshot_common::{Config, ImageFormat, Status};
+use bcshot_common::{Config, ImageFormat, Status, hotkey};
 use gpui_kit::component::{
     ActiveTheme as _, Disableable as _, Sizable as _,
     button::{Button, ButtonVariants as _},
@@ -23,6 +23,8 @@ pub struct SettingsView {
     quality: Entity<SliderState>,
     /// None = background app not running
     status: Option<Status>,
+    /// Can we read /dev/input? (the capture key needs it)
+    key_access: bool,
     /// bottom message: (text, is_error)
     message: Option<(SharedString, bool)>,
     _subs: Vec<Subscription>,
@@ -80,7 +82,7 @@ impl SettingsView {
         // ---- file name prefix
         let prefix = cx.new(|cx| {
             InputState::new(window, cx)
-                .placeholder("bandicam")
+                .placeholder("bcshot")
                 .default_value(cfg.prefix.clone())
         });
         subs.push(cx.subscribe_in(
@@ -148,6 +150,7 @@ impl SettingsView {
         Self {
             cfg_mtime: Config::mtime(),
             status: bcshot_common::status().ok(),
+            key_access: hotkey::keyboard_access(),
             cfg,
             nums,
             prefix,
@@ -205,6 +208,12 @@ impl SettingsView {
     fn poll(&mut self, st: Option<Status>, window: &mut Window, cx: &mut Context<Self>) {
         let mut changed = st != self.status;
         self.status = st;
+
+        let access = hotkey::keyboard_access();
+        if access != self.key_access {
+            self.key_access = access;
+            changed = true;
+        }
 
         let mt = Config::mtime();
         if mt != self.cfg_mtime {
@@ -457,16 +466,13 @@ impl SettingsView {
                     "Screen height",
                     NumberInput::new(&self.nums[5]).small(),
                     cx,
-                ))
-                .child(
-                    div()
-                        .flex_1()
-                        .text_xs()
-                        .text_color(cx.theme().muted_foreground)
-                        .child(
-                            "Your native resolution. Scaling (125 %, 150 %) is handled for you.",
-                        ),
-                ),
+                )),
+        )
+        .child(
+            div()
+                .text_xs()
+                .text_color(cx.theme().muted_foreground)
+                .child("Your native resolution. Scaling (125 %, 150 %) is handled for you."),
         )
     }
 
@@ -613,12 +619,49 @@ impl SettingsView {
                     },
                 ))
         };
+        let key_btn = |name: &'static str, label: &'static str| {
+            let sel = self.cfg.capture_key == name;
+            let b = Button::new(SharedString::from(format!("key-{name}")))
+                .label(label)
+                .small();
+            let b = if sel { b.primary() } else { b.ghost() };
+            b.on_click(cx.listener(move |this, _: &ClickEvent, _, cx| {
+                this.cfg.capture_key = name.to_string();
+                this.commit(cx);
+            }))
+        };
+        let key_on = hotkey::key_code(&self.cfg.capture_key).is_some();
+        const FIX: &str = "sudo usermod -aG input $USER";
+
         Self::card("Hotkeys", None, cx)
+            .child(Self::field(
+                "Capture key: tap it on its own to capture",
+                h_flex()
+                    .flex_wrap()
+                    .gap_1()
+                    .child(key_btn("", "Off"))
+                    .children(hotkey::KEYS.iter().map(|k| key_btn(k.0, k.1))),
+                cx,
+            ))
+            .when(key_on && self.key_access, |d| {
+                d.child(div().text_xs().text_color(t.muted_foreground).child(
+                    "Combos still work as usual (e.g. Ctrl+C). Holding the key longer than \
+                     a second doesn't capture.",
+                ))
+            })
+            .when(key_on && !self.key_access, |d| {
+                d.child(div().text_xs().text_color(t.danger).child(
+                    "bcshot can't read the keyboard yet, so the capture key is off. \
+                     Run this once in a terminal, then log out and back in:",
+                ))
+                .child(line("copy-fix", FIX, "Lets bcshot see key presses"))
+            })
             .child(line("copy-cap", "bcshot capture", "Take a screenshot"))
             .child(line("copy-edit", "bcshot edit", "Adjust / lock the frame"))
             .child(div().text_xs().text_color(t.muted_foreground).child(
-                "KDE: System Settings → Keyboard → Shortcuts → Add New → Command or Script. \
-                         GNOME: Settings → Keyboard → Custom Shortcuts. No plug-in needed.",
+                "Or bind these as desktop shortcuts. KDE: System Settings → Keyboard → \
+                         Shortcuts → Add New → Command or Script. GNOME: Settings → Keyboard → \
+                         Custom Shortcuts.",
             ))
     }
 

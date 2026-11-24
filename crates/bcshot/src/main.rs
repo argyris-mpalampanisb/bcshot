@@ -9,6 +9,7 @@
 
 mod capture;
 mod frame;
+mod hotkey;
 mod notify;
 mod server;
 mod tray;
@@ -123,6 +124,7 @@ impl App {
             eprintln!("bcshot: hotkey socket unavailable: {e}");
         }
         let tray = tray::spawn(shared.clone(), cc.egui_ctx.clone());
+        hotkey::spawn(shared.clone());
         // first run: show the settings window too (unless it started us)
         if first_run && std::env::var_os("BCSHOT_FROM_SETTINGS").is_none() {
             server::open_settings();

@@ -20,14 +20,14 @@ Two programs that work together:
 # Fedora
 sudo dnf install gcc clang pkgconf-pkg-config libxcb-devel libxkbcommon-devel libxkbcommon-x11-devel \
      wayland-devel vulkan-loader-devel pipewire-devel dbus-devel fontconfig-devel freetype-devel \
-     openssl-devel mesa-libEGL-devel
+     openssl-devel mesa-libEGL-devel mesa-libgbm-devel
 # Debian/Ubuntu
 sudo apt install build-essential clang pkg-config libxcb1-dev libxkbcommon-dev libxkbcommon-x11-dev \
      libwayland-dev libvulkan-dev libpipewire-0.3-dev libdbus-1-dev libfontconfig-dev libfreetype-dev \
-     libssl-dev libegl1-mesa-dev
+     libssl-dev libegl1-mesa-dev libgbm-dev
 # Arch
 sudo pacman -S base-devel clang libxcb libxkbcommon libxkbcommon-x11 wayland vulkan-icd-loader \
-     pipewire dbus fontconfig freetype2 openssl
+     pipewire dbus fontconfig freetype2 openssl mesa
 
 ./install.sh
 ```
@@ -38,13 +38,14 @@ Open **bcshot** from your app menu. On first run the frame is unlocked so you ca
 
 ## Using it
 
-- **Hotkeys:** bind these in KDE (System Settings → Keyboard → Shortcuts → Add New → Command or Script) or GNOME (Settings → Keyboard → Custom Shortcuts). No plug-in is needed: the desktop catches the key and runs the command.
+- **Capture key:** tap **Right Ctrl** on its own to capture, like Bandicam on Windows. Pick another key (or Off) in Settings → Hotkeys. Combos such as Ctrl+C still work normally, and holding the key for over a second doesn't capture. bcshot reads the keyboard directly (desktop shortcuts can't bind a lone modifier), so run `sudo usermod -aG input $USER` once and log out and back in. Note that this lets any program you run read key presses.
+- **Desktop hotkeys:** you can also bind these in KDE (System Settings → Keyboard → Shortcuts → Add New → Command or Script) or GNOME (Settings → Keyboard → Custom Shortcuts). No plug-in is needed: the desktop catches the key and runs the command.
   - `bcshot capture`: screenshot of the frame area
   - `bcshot edit`: unlock the frame to adjust it, or lock it again
 - **Adjusting the frame:** drag inside it to move it, drag an edge or corner to resize it, drag outside it to draw a new one. Arrow keys nudge it (Shift = 10px, Ctrl = resize). Enter or double-click locks it, Esc cancels.
 - **Tray icon:** Capture now, Adjust/Lock frame, Show frame, Open folder, Settings…, Quit. Left-click opens Settings. KDE shows it out of the box; GNOME needs the "AppIndicator and KStatusNotifierItem Support" extension.
 - **After each capture:** a notification shows a thumbnail with Open / Show in folder. A new one replaces the previous one, so rapid captures don't pile up.
-- Files are named like Bandicam: `bandicam 2026-10-28 20-08-18-261.jpg`.
+- Files are named like Bandicam: `bcshot 2026-10-28 20-08-18-261.jpg`.
 
 ## Why two toolkits
 

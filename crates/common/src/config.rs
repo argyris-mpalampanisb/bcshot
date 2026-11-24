@@ -33,6 +33,9 @@ pub struct Config {
     pub notify: bool,
     /// Draw the coloured frame around the capture area (like Bandicam)
     pub show_frame: bool,
+    /// Single key that captures when tapped on its own (see `hotkey::KEYS`),
+    /// e.g. "RightCtrl". Empty = off (use desktop shortcuts instead).
+    pub capture_key: String,
 }
 
 impl Default for Config {
@@ -50,12 +53,13 @@ impl Default for Config {
             out_dir: dirs::picture_dir()
                 .unwrap_or_else(|| dirs::home_dir().unwrap_or_default())
                 .join("Ultimate_Deck"),
-            prefix: "bandicam".into(),
+            prefix: "bcshot".into(),
             format: ImageFormat::Jpg,
-            jpeg_quality: 95,
-            shutter_sound: true,
+            jpeg_quality: 100,
+            shutter_sound: false,
             notify: true,
             show_frame: true,
+            capture_key: "RightCtrl".into(),
         }
     }
 }

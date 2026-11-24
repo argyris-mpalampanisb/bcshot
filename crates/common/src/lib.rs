@@ -1,6 +1,7 @@
 //! Shared between the background app (`bcshot`) and the settings app.
 
 mod config;
+pub mod hotkey;
 pub use config::{Config, ImageFormat};
 
 use std::{
