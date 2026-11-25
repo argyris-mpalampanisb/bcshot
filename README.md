@@ -203,7 +203,7 @@ The frame must be transparent, always on top and click-through. GPUI can't do al
 <details>
 <summary><b>"Cannot find required wayland protocol" when tapping quickly</b></summary>
 
-Fixed in the current version. Each capture takes about a second through the screenshot portal, and older versions ran overlapping captures at once, which the portal can't handle. Captures now queue up, so every tap is saved. When you tap faster than about once a second, each screenshot is taken when its turn comes, not at the exact moment you tapped.
+Fixed in v0.2.1, so update if you still see it. Each capture takes about a second through the screenshot portal, and older versions ran overlapping captures at once, which the portal can't handle. Captures now queue up, so every tap is saved. When you tap faster than about once a second, each screenshot is taken when its turn comes, not at the exact moment you tapped.
 
 </details>
 
