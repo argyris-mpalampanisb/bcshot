@@ -29,7 +29,8 @@ pub struct Config {
     pub format: ImageFormat,
     pub jpeg_quality: u8,
     pub shutter_sound: bool,
-    /// Desktop notification (with thumbnail) after each capture
+    /// Desktop notification (with thumbnail) after each successful capture.
+    /// Failure notifications are always shown.
     pub notify: bool,
     /// Draw the coloured frame around the capture area (like Bandicam)
     pub show_frame: bool,

@@ -577,7 +577,7 @@ impl SettingsView {
             ))
             .child(Self::row(
                 "Notification",
-                "Thumbnail with Open / Show in folder",
+                "Thumbnail after each capture. Failures always show.",
                 Switch::new("notify")
                     .checked(c.notify)
                     .on_click(cx.listener(|this, on: &bool, _, cx| {

@@ -29,7 +29,7 @@ Set the frame once, then tap **Right Ctrl** whenever you want a capture. No dial
 - ⌨️ **Single-key capture.** Tap **Right Ctrl** on its own, or any key you pick. Combos like Ctrl+C keep working normally.
 - 🔇 **Silent and lossless by default.** No shutter sound, JPEG quality 100.
 - 🗂️ **Timestamped files.** Saved as `bcshot 2026-10-28 20-08-18-261.jpg` to the folder you choose.
-- 🖼️ **Notification preview.** A thumbnail with *Open* and *Show in folder* after each capture. A new capture replaces the old notification, so rapid captures don't pile up.
+- 🖼️ **Notification preview.** A thumbnail with *Open* and *Show in folder* after each capture. A new capture replaces the old notification, so rapid captures don't pile up. Turn it off in Settings → **Notification**; failed captures are still reported.
 - 🧭 **Tray icon.** Capture, adjust the frame, open the folder and open Settings from the tray.
 - 🎨 **Settings window.** Dark theme with a live preview of the last capture. Native Wayland, sharp at fractional scaling.
 - 🔁 **Live config.** Both apps watch the config file, so changes apply immediately.
@@ -199,6 +199,13 @@ The frame must be transparent, always on top and click-through. GPUI can't do al
 </details>
 
 ## 🛠️ Troubleshooting
+
+<details>
+<summary><b>"Cannot find required wayland protocol" when tapping quickly</b></summary>
+
+Fixed in the current version. Each capture takes about a second through the screenshot portal, and older versions ran overlapping captures at once, which the portal can't handle. Captures now queue up, so every tap is saved. When you tap faster than about once a second, each screenshot is taken when its turn comes, not at the exact moment you tapped.
+
+</details>
 
 <details>
 <summary><b>Tapping Right Ctrl does nothing</b></summary>

@@ -44,7 +44,9 @@ pub fn do_capture(shared: &SharedRef) -> String {
         if cfg.notify {
             notify::captured(&p);
         }
-    } else if cfg.notify {
+    } else {
+        // Failures always show, even with the success popup off, so a lost
+        // capture is never silent.
         notify::failed(&reply);
     }
     reply

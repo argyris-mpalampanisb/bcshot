@@ -1,7 +1,7 @@
 use anyhow::{Context, Result, anyhow};
 use bcshot_common::{Config, ImageFormat};
 use image::{DynamicImage, codecs::jpeg::JpegEncoder, imageops};
-use std::{fs::File, io::BufWriter, path::PathBuf, process::Command};
+use std::{fs::File, io::BufWriter, path::PathBuf, process::Command, sync::Mutex};
 use xcap::Monitor;
 
 fn monitor(idx: usize) -> Result<Monitor> {
@@ -75,7 +75,14 @@ pub fn capture_direct(cfg: &Config) -> Result<PathBuf> {
 /// placed and kept on top), but an XWayland process can't see Wayland windows,
 /// so the actual grab runs in a short-lived child with the real Wayland
 /// environment. Returns "OK <path>" or "ERR <reason>".
+///
+/// Captures run one at a time. The screenshot portal can't serve overlapping
+/// requests (a portal grab takes ~1 s on KDE), and when one fails xcap falls
+/// back to wlr-screencopy, which KWin lacks, so rapid taps used to fail with
+/// "Cannot find required wayland protocol". Queued taps now wait their turn.
 pub fn run_capture(cfg: &Config) -> String {
+    static CAPTURE_LOCK: Mutex<()> = Mutex::new(());
+    let _guard = CAPTURE_LOCK.lock().unwrap_or_else(|e| e.into_inner());
     match crate::wayland_display() {
         None => match capture_direct(cfg) {
             Ok(p) => format!("OK {}", p.display()),
